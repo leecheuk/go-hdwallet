@@ -3,12 +3,12 @@ package hdwallet
 import (
 	"crypto/ecdsa"
 	"encoding/hex"
-	"fmt"
 
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/btcutil/hdkeychain"
 	"github.com/btcsuite/btcd/txscript"
+	"github.com/leecheuk/go-hdwallet/bchutil"
 )
 
 // Key struct
@@ -174,21 +174,19 @@ func (k *Key) AddressBTC() (string, error) {
 
 // AddressBCH generate public key to bch style address
 func (k *Key) AddressBCH() (string, error) {
-	return "", fmt.Errorf("Not implemented")
+	address, err := k.Extended.Address(k.Opt.Params)
+	if err != nil {
+		return "", err
+	}
 
-	// address, err := k.Extended.Address(k.Opt.Params)
-	// if err != nil {
-	// 	return "", err
-	// }
+	addr, err := bchutil.NewCashAddressPubKeyHash(address.ScriptAddress(), k.Opt.Params)
+	if err != nil {
+		return "", err
+	}
 
-	// addr, err := bchutil.NewCashAddressPubKeyHash(address.ScriptAddress(), k.Opt.Params)
-	// if err != nil {
-	// 	return "", err
-	// }
-
-	// data := addr.EncodeAddress()
-	// prefix := bchutil.Prefixes[k.Opt.Params.Name]
-	// return prefix + ":" + data, nil
+	data := addr.EncodeAddress()
+	prefix := bchutil.Prefixes[k.Opt.Params.Name]
+	return prefix + ":" + data, nil
 }
 
 // AddressP2WPKH generate public key to p2wpkh style address
