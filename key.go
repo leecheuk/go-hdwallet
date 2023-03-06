@@ -3,12 +3,12 @@ package hdwallet
 import (
 	"crypto/ecdsa"
 	"encoding/hex"
+	"fmt"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcutil"
+	"github.com/btcsuite/btcd/btcutil/hdkeychain"
 	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcutil/hdkeychain"
-	"github.com/cpacia/bchutil"
 )
 
 // Key struct
@@ -93,7 +93,7 @@ func (k *Key) GetChildKey(opts ...Option) (*Key, error) {
 
 	extended := k.Extended
 	for _, i := range no.GetPath() {
-		extended, err = extended.Child(i)
+		extended, err = extended.Derive(i)
 		if err != nil {
 			return nil, err
 		}
@@ -174,19 +174,21 @@ func (k *Key) AddressBTC() (string, error) {
 
 // AddressBCH generate public key to bch style address
 func (k *Key) AddressBCH() (string, error) {
-	address, err := k.Extended.Address(k.Opt.Params)
-	if err != nil {
-		return "", err
-	}
+	return "", fmt.Errorf("Not implemented")
 
-	addr, err := bchutil.NewCashAddressPubKeyHash(address.ScriptAddress(), k.Opt.Params)
-	if err != nil {
-		return "", err
-	}
+	// address, err := k.Extended.Address(k.Opt.Params)
+	// if err != nil {
+	// 	return "", err
+	// }
 
-	data := addr.EncodeAddress()
-	prefix := bchutil.Prefixes[k.Opt.Params.Name]
-	return prefix + ":" + data, nil
+	// addr, err := bchutil.NewCashAddressPubKeyHash(address.ScriptAddress(), k.Opt.Params)
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// data := addr.EncodeAddress()
+	// prefix := bchutil.Prefixes[k.Opt.Params.Name]
+	// return prefix + ":" + data, nil
 }
 
 // AddressP2WPKH generate public key to p2wpkh style address
