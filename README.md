@@ -1,6 +1,6 @@
-## go-hdwallet
+## go-hdwallet (leecheuk/go-hdwallet)
 
-A multi-cryptocurrency HD wallet implementated by golang.
+A multi-cryptocurrency HD wallet implementated by golang. Updated outdated packages (ie. bchutil, btcec, btcutil).
 
 ## supported coins
 
